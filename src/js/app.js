@@ -1,3 +1,5 @@
+
+
 var app = angular.module('app', ['ui.bootstrap']);
 
 app.controller('MainCtrl', ['$scope', '$http', 'TripRequestService', MainCtrl])
@@ -8,26 +10,33 @@ function MainCtrl($scope, $http,TripRequestService) {
 
     $scope.status = "Wolfgang";
     
+    var getloc = TripRequestService.locationservice;
     var api_key = 'XwCTb7o9iV';
 
-    
     $scope.names = undefined;
 
     $scope.routes = [];
 
-    $scope.stations = ['Reumannplatz', 'Stephansplatz', 'Herrengasse','60200769','60200560'];
+    var stations = ['Reumannplatz','Keplerplatz', 'Südtiroler Platz-Hauptbahnhof', 'Taubstummengasse',
+    'Karlsplatz', 'Stephansplatz', 'Herrengasse','Schwedenplatz','Nestroyplatz', 'Praterster',
+    'Vorgartenstraße','Donauinsel','Kaisermühlen','Alte Donau','Kagran','Kagraner Platz','Rennbahnweg',
+    'Aderklaaer Straße','Großfeldsiedlung','Leopoldau'];
+       
     $scope.divclass = {};
+    $scope.stations = stations;
 
     $scope.divclass['U1-H'] = "U1";
     $scope.divclass['U3-R'] = "timeline-content";
     
     $scope.itdItinerary = {};
-   
-    // var getloc = TripRequestService.locationservice;
-    
-    // getloc('Leopoldau').then(function(data){
-    //     console.log(data);
-    // })
+   console.log('hello!!??!');
+    for (var i = 0; i < stations.length; i++) {
+        getloc(stations[i]).then(function (data) {
+            console.log($scope.stations[i]);
+            console.log(stations[i], data.data.stopFinder[0].ref.id);
+        })
+    }
+        
     
     $scope.request = function (journey) {
 
@@ -36,14 +45,7 @@ function MainCtrl($scope, $http,TripRequestService) {
         // var goal = 'Stephansplatz';
         
         console.log(journey);
-        
-        
-        
-        
-        
-        
-        
-        
+            
         console.log("http://www.wienerlinien.at/ogd_routing/XML_TRIP_REQUEST2?locationServerActive=1&type_origin=any&name_origin="+journey.startpoint+"&type_destination=any&name_destination=" + journey.endpoint);
         
         $http({
@@ -123,14 +125,18 @@ function MainCtrl($scope, $http,TripRequestService) {
                             var stop = tmp[j];
                             stop['symb'] = symb;
                             $scope.departures.push(tmp[j]);
+                            console.log('station',tmp[j]);
                         }
                     }
 
                 } else {
                     $scope.departures = x.itdRouteList.itdRoute[0].itdPartialRouteList.itdPartialRoute.itdStopSeq.itdPoint;
-                    console.log(x.itdRouteList.itdRoute[j].itdPartialRouteList.itdPartialRoute.itdStopSeq.itdPoint[2].itdDateTime.itdTime._hour);
-
                 }
+                
+                
+                
+                
+                console.log('Departures', $scope.departures);
                  
                 //   console.log("means of transport",x.itdRouteList.itdRoute[0].itdPartialRouteList.itdPartialRoute.itdMeansOfTransport);
 

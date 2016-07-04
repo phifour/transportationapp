@@ -56,12 +56,10 @@
   <li ng-repeat="x in departures">
     <p class="timeline-date"></p>
     <div class="{{divclass[x._platform]}}">
-      <h4>{{x.symb}}, {{x._name}}</h4>
+      <h4>{{x.symb}}, {{x._name}}, {{x.itdDateTime.itdTime._hour}}: {{x.itdDateTime.itdTime._minute}}</h4>
     </div>
   </li>
 </ul>
-
-
 
 <div class="container">
   <h2>Dynamic Tabs</h2>
