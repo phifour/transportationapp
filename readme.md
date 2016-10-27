@@ -1,32 +1,17 @@
-## [View the Trained to Thrill demo](https://jakearchibald.github.io/trained-to-thrill/)
+# Transportation App
+This program has been written in AngularJS.
+Since the Viemma Underground API only supports http requests in order to deal with those requests the glp file had to be extaned with an own server (server.js),
+which deals with taht requests.
 
-##Instructions:
+## Using the App
+This app shows arrival times for the Vienna Underground line U1.
 
-1. Open Chrome
-1. Click the above link
-1. Turn off your network connection via wifi or Chrome DevTools [Device Mode](https://developer.chrome.com/devtools/docs/device-mode#network-conditions)
-1. Reload the page! OMG STILL WORKS!!!1
-1. Read the [service worker source js](https://github.com/jakearchibald/trained-to-thrill/blob/master/src/js/sw/index.js)
+## Build Process
+To install open a terminal and type:
+- git clone https://github.com/phifour/transportationapp.git transportationapp
+- cd transportationapp
+- npm install
+- gulp build
+- gulp serve
 
-## Hack on the code
 
-### Prerequisites
-
-* [Node](http://nodejs.org/)
-
-Then clone this repo & run:
-
-```sh
-npm install
-```
-
-### Running
-
-```sh
-npm run serve
-```
-
-The server will be running at
-[http://localhost:8000/](http://localhost:8000/
-)
-"# transportationapp" 
