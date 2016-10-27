@@ -23,13 +23,18 @@
     "handlebars": "^3.0.1",
     "hbsfy": "^2.2.1",
     "merge-stream": "^0.1.7",
+    "path": "0.12.7",
     "run-sequence": "^1.0.2",
     "serviceworker-cache-polyfill": "^3.0.0",
+    "sw-precache": "4.0.0",
     "through2": "^0.6.5",
     "uglifyify": "^3.0.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.1.0",
     "whatwg-fetch": "^0.7.0"
+  },
+  "dependencies": {
+    "request-promise": "^4.1.1"
   }
 }

@@ -1,187 +1,101 @@
 <!DOCTYPE html>
 
 <html ng-app="app" lang="en">
-    
+
 <head>
-  <meta charset="UTF-8">
-  <meta name=viewport content="width=device-width, initial-scale=1">
-  <title>Vienna Underground</title>
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/online.min.css">
-  <link rel="stylesheet" href="css/figures.css">
+    <meta charset="UTF-8">
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <title>Vienna Underground</title>
+    <link rel="icon" type="image/ico" href="favicon.ico">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/figures.css">
 </head>
+
 <body>
 
+    <div class="container" ng-controller="MainCtrl">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" rel="icon" type="image/ico" href="favicon.ico">
+                        Vienna Underground
+                        <!--<img alt="Brand" src="favicon.ico" height="30" width="30">-->
+                    </a>
+                </div>
+            </div>
+        </nav>
 
-<div class="container" ng-controller="MainCtrl">
+        <div class="container-fluid">
+            <label>Start</label>
+            <select class="form-control" ng-model="journey.startpoint" ng-options="x.name for x in stations">
+            </select>
+            <br>
+            <label>End</label>
+            <select class="form-control" ng-model="journey.endpoint" ng-options="x.name for x in stations">
+            </select>
+            <br>
 
-<nav role="navigation" class="navbar navbar-inverse">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-        <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-        <!--<a href="#" class="navbar-brand">Brand</a>-->
-    </div>
-    <!-- Collection of nav links, forms, and other content for toggling -->
-    <div id="navbarCollapse" class="collapse navbar-collapse">
-        <ul class="nav navbar-nav">
-            <li><a href="#/home">Home</a></li>
-        </ul>
-        <ul class="nav navbar-nav navbar-right"> 
-        </ul>
-    </div>
+            <div class="alert alert-danger" ng-show="checkequal(journey.startpoint,journey.endpoint)">Start and End can not be the same</div>
 
-</nav>
-
-
-	<label>Start</label> <select ng-model="journey.startpoint" ng-options="x for x in stations" ng-init="journey.startpoint = 'EUR'"> </select><br> 
-    <label>End</label> <select ng-model="journey.endpoint" ng-options="x for x in stations" ng-init="journey.endpoint = 'EUR'"> </select><br> 
-    
-    
-    
-    <label>Routes</label> <select ng-model="selectedroute" ng-options="x for x in routes" ng-init="0"> </select><br> 
-    
-    
-  <button class="btn btn-primary" ng-click="request(journey)">Request Info</button>
-
-<!--<ul>
-    <li ng-repeat="x in departures">{{x._name}},{{x._platform}},{{x.itdDateTime.itdTime._hour}}</li>
-</ul>-->
-
-<ul class="timeline">
-  <li ng-repeat="x in departures">
-    <p class="timeline-date"></p>
-    <div class="{{divclass[x._platform]}}">
-      <h4>{{x.symb}}, {{x._name}}, {{x.itdDateTime.itdTime._hour}}: {{x.itdDateTime.itdTime._minute}}</h4>
-    </div>
-  </li>
-</ul>
-
-<div class="container">
-  <h2>Dynamic Tabs</h2>
-  <ul class="nav nav-tabs">
-    <!--<li class="active"><a data-toggle="tab" href="#home">Home</a></li>-->
-    <li><a data-toggle="tab" href="#menu1">Menu 1</a></li>
-    <li><a data-toggle="tab" href="#menu2">Menu 2</a></li>
-    <li><a data-toggle="tab" href="#menu3">Menu 3</a></li>
-  </ul>
-
-  <div class="tab-content">
-      
-      
-<!--<div ng-repeat="route in routes">
-    <h5>{{route.itdPartialRouteList.itdPartialRoute}}</h5>
-</div>-->
-      
-    <!--<div id="home" class="tab-pane fade in active">
-      <h3>HOME</h3>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-    </div>-->
-    <div id="menu1" class="tab-pane fade">
-      <h3>Menu 1</h3>
-      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-    </div>
-    <div id="menu2" class="tab-pane fade">
-      <h3>Menu 2</h3>
-      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
-    </div>
-    <div id="menu3" class="tab-pane fade">
-      <h3>Menu 3</h3>
-      <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-    </div>
-  </div>
-  
-</div>
+            <button class="btn btn-primary btn-block" ng-click="request(journey)">Request Route</button>
+        </div>
 
 
+        <div class="container" ng-show="showresult">
+            <div class="row">
+                <div class="col-sm-6" align="center">
+                    <h2>Start : {{startime}}</h2></div>
+                <div class="col-sm-6" align="center">
+                    <h2>Estimated End : {{endtime}}</h2></div>
+            </div>
+        </div>
+
+        <table class="table table-bordered table-hover table-condensed">
+
+            <col align="center">
+                <col align="left">
+                    <col align="right">
+
+                        <tr style="font-weight: bold">
+                            <td></td>
+                            <td>Station</td>
+                            <td>Time</td>
+                        </tr>
 
 
+                        <tr ng-repeat="x in departures">
+                            <td align="center">
+                                U1
+                                <div class="full-circle">
+                                    <div>
+                            </td>
+                            <td>
+                                <strong>{{x._name}}</strong>
+                            </td>
+                            <td>
+                                <strong>{{formatnumber(x.itdDateTime.itdTime._hour)}}:{{formatnumber(x.itdDateTime.itdTime._minute)}}</strong>
+                            </td>
+                        </tr>
+        </table>
 
 
+        <script type="text/javascript" src="dependencies/jquery.min.js"></script>
+        <script type="text/javascript" src="dependencies/xml2json.js"></script>
+        <script type="text/javascript" src="dependencies/bootstrap.min.js"></script>
+        <script type="text/javascript" src="dependencies/angular.min.js"></script>
+        <script type="text/javascript" src="dependencies/ui-bootstrap-tpls-1.3.2.js"></script>
+        <script type="text/javascript" src="dependencies/angular-resource.min.js"></script>
+        <script type="text/javascript" src="dependencies/angular-route.min.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
 
-
-
-
-
-
-<!--, {{x.itdDateTime.itdTime._hour}}:{{x.itdDateTime.itdTime._minute}}-->
-
-
-
-<!--<ul>
-    <li ng-repeat="route in routes">{{route}}
-        <li ng-repeat="y in route.itdPartialRouteList.itdPartialRoute.itdStopSeq.itdPoint">
-            <li ng-repeat="z in y">
-                {{z._name}}
-            </li>
-        </li>
-    </li>
-</ul>-->
-
-
-
-
-<!--<ul class="timeline">
-  <li>
-    <p class="timeline-date">2007年2月</p>
-    <div class="timeline-content">
-      <h3>カナダでワーキングホリデー</h3>
-      <p>x</p>
-    </div>
-  </li>
-  <li>
-    <p class="timeline-date">2008</p>
-    <div class="timeline-content">
-      <h3>s</h3>
-      <p>s</p>
-    </div>
-  </li>
-  <li>
-    <p class="timeline-date">2009年2月</p>
-    <div class="timeline-content">
-      <h3>sdsss</h3>
-      <p>sdsdd</p>
-    </div>
-  </li>
-</ul>-->
-
-
-
-
-
-
-
-
-
-
-
-  <h1>you are online </h1>
-    
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>     
-  <script type="text/javascript" src="dependencies/xml2json.js"></script>     
-  <script type="text/javascript" src="dependencies/bootstrap.min.js"></script>
-  <script type="text/javascript" src="dependencies/angular.min.js"></script>
-  <script type="text/javascript" src="dependencies/angular-xml.min.js"></script>
-  <script type="text/javascript" src="dependencies/ui-bootstrap-tpls-1.3.2.js"></script>
-  <script type="text/javascript" src="dependencies/angular-resource.min.js"></script>
-  <script type="text/javascript" src="dependencies/angular-route.min.js"></script>
-  <script type="text/javascript" src="js/app.js"></script>
-  <script src="upup.min.js"></script>
-  <script>
-    // Let's turn on debugging messages
-    UpUp.debug();
-
-    // Let's start UpUp with some basic settings
-    UpUp.start({
-      'content-url': 'offline.html',
-      'assets': ['css/offline.css', 'css/bootstrap.min.css', 'img/mb-offline.png', 'img/logo.png', 'img/sunset.jpg']
-    });
-  </script>
-
+        <!--<script>
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/my-service-worker.js').then(function() { 
+            console.log("Service Worker Registered"); 
+            });
+            }
+        </script>-->
 
 </body>
+
 </html>
