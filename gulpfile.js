@@ -130,7 +130,6 @@ function createBundler(src) {
 
 var bundlers = {
     'js/app.js': createBundler(['./src/js/app.js',
-        './src/js/service/triprequest.service.js',
         './src/js/controller/main.controller.js'
     ])
 };

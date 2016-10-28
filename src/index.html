@@ -35,8 +35,9 @@
             </select>
             <br>
 
+            <div class="alert alert-danger" ng-show="journey.startpoint==undefined">Start undefined</div>
+            <div class="alert alert-danger" ng-show="journey.endpoint==undefined">End undefined</div>
             <div class="alert alert-danger" ng-show="checkequal(journey.startpoint,journey.endpoint)">Start and End can not be the same</div>
-
             <button class="btn btn-primary btn-block" ng-click="request(journey)">Request Route</button>
         </div>
 
