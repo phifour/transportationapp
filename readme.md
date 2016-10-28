@@ -1,7 +1,7 @@
 # Transportation App
 This program has been written in AngularJS.
-Since the Viemma Underground API only supports http requests in order to deal with those requests the glp file had to be extaned with an own server (server.js),
-which deals with taht requests.
+Since the Vienna Underground API only supports http requests Gulp browser-sync had to be 
+modefied in order to deal with those kind of requests. The http-requests are implemented in the nodejs server (server.js). 
 
 ## Using the App
 This app shows arrival times for the Vienna Underground line U1.
