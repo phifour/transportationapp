@@ -1,6 +1,6 @@
 # Transportation App
 This program has been written in AngularJS.
-Since the Vienna Public Transport API only supports http requests, Gulp browser-sync had to be 
+Since the Vienna public transport API only supports http requests, Gulp browser-sync had to be 
 modefied in order to deal with those kind of requests. The http-requests are implemented in the nodejs server (server.js). 
 
 ## Using the App
