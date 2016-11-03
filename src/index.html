@@ -37,7 +37,7 @@
 
             <div class="alert alert-danger" ng-show="journey.startpoint==undefined">Start undefined</div>
             <div class="alert alert-danger" ng-show="journey.endpoint==undefined">End undefined</div>
-            <div class="alert alert-danger" ng-show="checkequal(journey.startpoint,journey.endpoint)">Start and End can not be the same</div>
+
             <button class="btn btn-primary btn-block" ng-click="request(journey)">Request Route</button>
         </div>
 
@@ -45,11 +45,13 @@
         <div class="container" ng-show="showresult">
             <div class="row">
                 <div class="col-sm-6" align="center">
-                    <h2>Start : {{startime}}</h2></div>
+                    <h3>Start : {{startime}}</h3></div>
                 <div class="col-sm-6" align="center">
-                    <h2>Estimated End : {{endtime}}</h2></div>
+                    <h3>Estimated End : {{endtime}}</h3></div>
             </div>
         </div>
+
+        <div class="alert alert-danger" ng-show="youareoffline">No internet connection using chached offline data</div>
 
         <table class="table table-bordered table-hover table-condensed">
 
@@ -89,14 +91,13 @@
         <script type="text/javascript" src="dependencies/angular-route.min.js"></script>
         <script type="text/javascript" src="js/app.js"></script>
 
-        <!--<script>
+        <script>
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/my-service-worker.js').then(function() { 
-            console.log("Service Worker Registered"); 
-            });
-            }
-        </script>-->
-
+                        navigator.serviceWorker.register('/my-service-worker.js').then(function() { 
+                    console.log("Service Worker Registered"); 
+                    });
+                    }
+        </script>
 </body>
 
 </html>

@@ -24,6 +24,7 @@ var browserSync = require('browser-sync');
 var watchify = require('watchify');
 var browserify = require('browserify');
 var uglifyify = require('gulp-uglifyjs');
+var stripDebug = require('gulp-strip-debug');
 var mergeStream = require('merge-stream');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
@@ -130,7 +131,8 @@ function createBundler(src) {
 
 var bundlers = {
     'js/app.js': createBundler(['./src/js/app.js',
-        './src/js/controller/main.controller.js'
+        './src/js/controller/main.controller.js',
+         './src/js/controller/dummy.js'
     ])
 };
 
@@ -159,10 +161,10 @@ gulp.task('json', function () {
 gulp.task('js', function () {
     gulp.src(['./src/js/**'])
         .pipe(concat('app.js'))
-    //  .pipe(uglifyify())
+        //.pipe(uglifyify())
+        //.pipe(stripDebug())
         .pipe(gulp.dest('./dist/js/'))
 });
-
 
 gulp.task('watch', ['build'], function () {
     gulp.watch(['src/*.html'], ['html']);
@@ -186,8 +188,8 @@ gulp.task('generate-service-worker', ['css', 'misc', 'html', 'js', 'json'], func
 });
 
 gulp.task('build', function () {
-    return runSequence('clean', ['css', 'misc', 'html', 'js','json']);
-    // truned off return runSequence('clean', ['generate-service-worker']);
+    //return runSequence('clean', ['css', 'misc', 'html', 'js','json']);
+    return runSequence('clean', ['css', 'misc', 'html', 'js','json','generate-service-worker']);
 });
 
 gulp.task('serve', ['browser-sync', 'watch']);
