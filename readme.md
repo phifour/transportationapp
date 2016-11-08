@@ -15,3 +15,5 @@ To install open a terminal and type:
 - gulp serve
 - app runs per default on http://localhost:3000/
 
+## Run in Developer Mode
+- gulp serve_dev

@@ -48,13 +48,36 @@ gulp.task('browser-sync', ['nodemon'], function() {
 	});
 });
 
+gulp.task('browser-sync_dev', ['nodemon_dev'], function() {
+	browserSync.init(null, {
+		// proxy: "http://localhost:8000",
+        files: ["dist/**/*.*"],
+        browser: "google chrome",
+        port: 8000,
+	});
+});
+
+
+
 gulp.task('nodemon', function (cb) {
 	var started = false;
 	return nodemon({
 		script: 'server.js'
 	}).on('start', function () {
-		// to avoid nodemon being started multiple times
-		// thanks @matthisk
+		if (!started) {
+			cb();
+			started = true; 
+		} 
+	});
+});
+
+
+gulp.task('nodemon_dev', function (cb) {
+	var started = false;
+	return nodemon({
+		script: 'server.js',
+        env: { 'NODE_ENV': 'development' }
+	}).on('start', function () {
 		if (!started) {
 			cb();
 			started = true; 
@@ -193,4 +216,5 @@ gulp.task('build', function () {
 });
 
 gulp.task('serve', ['browser-sync', 'watch']);
+gulp.task('serve_dev', ['browser-sync_dev', 'watch']);
 gulp.task('default', ['build']);
