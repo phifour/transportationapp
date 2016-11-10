@@ -184,8 +184,8 @@ gulp.task('json', function () {
 gulp.task('js', function () {
     gulp.src(['./src/js/**'])
         .pipe(concat('app.js'))
-        //.pipe(uglifyify())
-        //.pipe(stripDebug())
+        .pipe(uglifyify())
+        .pipe(stripDebug())
         .pipe(gulp.dest('./dist/js/'))
 });
 
