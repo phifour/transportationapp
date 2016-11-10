@@ -3,7 +3,7 @@ app.controller('MainCtrl', ['$scope', '$http', '$q' , MainCtrl])
 function MainCtrl($scope, $http, $q) {
 
     $scope.departures = [];
-
+    $scope.trainlist = [];
     $scope.stations = [];
     $scope.startime = '';
     $scope.endtime = '';
@@ -15,6 +15,15 @@ function MainCtrl($scope, $http, $q) {
     }).then(function (stations) {
         $scope.stations = stations;
     })
+
+    $scope.switcher = function(x){
+        if (x==true){
+            return 'Hide';
+        }else{
+            return 'Show';
+        }
+    }
+
 
     function objectFindByKey(array, key, value) {
         for (var i = 0; i < array.length; i++) {
@@ -60,38 +69,52 @@ function MainCtrl($scope, $http, $q) {
             var address = 'http://localhost:3000/api/reqroute/'+journey.startpoint.id+'/'+ journey.endpoint.id;                       
                                     
                 $http.get(address).then(function (data, status, headers, config) {
+                    
+                $scope.trainlist = [];
 
                 var x2js = new X2JS();
                 
                 var jsonObj = x2js.xml_str2json(data.data.body);
 
-                $scope.showresult = true;
-
-                var j = 2;
-
-                console.log('data', data);
-                console.log('jsonObj', jsonObj);
-
                 $scope.itdItinerary = jsonObj.itdRequest.itdTripRequest.itdItinerary;
 
                 var x = jsonObj.itdRequest.itdTripRequest.itdItinerary;
 
+                $scope.showresult = true;
+
+                // var j = 2;
+                
+                // for (var i = 0;i<x.itdRouteList.itdRoute.length;i++){
+                //     var start1 = x.itdRouteList.itdRoute[i].itdPartialRouteList.itdPartialRoute.itdPoint[0].itdDateTime.itdTime._hour;
+                //     var start2 = x.itdRouteList.itdRoute[i].itdPartialRouteList.itdPartialRoute.itdPoint[0].itdDateTime.itdTime._minute;
+                //     var end1 = x.itdRouteList.itdRoute[i].itdPartialRouteList.itdPartialRoute.itdPoint[1].itdDateTime.itdTime._hour;
+                //     var end2 = x.itdRouteList.itdRoute[i].itdPartialRouteList.itdPartialRoute.itdPoint[1].itdDateTime.itdTime._minute;
+                //     var train = {start:start1+':'+start2, end:end1+':'+end2};
+                //     $scope.trainlist.push(train);             
+                // }
+                
+                console.log('trainlist', $scope.trainlist);                                
+
+                console.log('data', data);
+                console.log('jsonObj', jsonObj);
                 console.log('data', jsonObj);
-
                 console.log("init structure", x.itdRouteList.itdRoute[0].itdPartialRouteList.itdPartialRoute);
+                console.log('Routes', x.itdRouteList.itdRoute.length);                
+                console.log('number of trains',x.itdRouteList.itdRoute.length)
 
-                console.log('Routes', x.itdRouteList.itdRoute.length);
-
+                for (var j = 0;j<x.itdRouteList.itdRoute.length;j++){
+                
                 var start1 = x.itdRouteList.itdRoute[j].itdPartialRouteList.itdPartialRoute.itdPoint[0].itdDateTime.itdTime._hour;
                 var start2 = x.itdRouteList.itdRoute[j].itdPartialRouteList.itdPartialRoute.itdPoint[0].itdDateTime.itdTime._minute;
 
                 var end1 = x.itdRouteList.itdRoute[j].itdPartialRouteList.itdPartialRoute.itdPoint[1].itdDateTime.itdTime._hour;
                 var end2 = x.itdRouteList.itdRoute[j].itdPartialRouteList.itdPartialRoute.itdPoint[1].itdDateTime.itdTime._minute;
 
-                $scope.startime = formatnumber(start1) + ':' + formatnumber(start2);
-                $scope.endtime = formatnumber(end1) + ':' + formatnumber(end2);
+                var trainplan = {start:formatnumber(start1) + ':' + formatnumber(start2),
+                    end:formatnumber(end1) + ':' + formatnumber(end2)
+                   ,departures:[]};
 
-                $scope.routes = jsonObj.itdRequest.itdTripRequest.itdItinerary.itdRouteList.itdRoute;
+                // $scope.routes = jsonObj.itdRequest.itdTripRequest.itdItinerary.itdRouteList.itdRoute;
 
                 var xx = x.itdRouteList.itdRoute[j].itdPartialRouteList.itdPartialRoute;
 
@@ -117,7 +140,7 @@ function MainCtrl($scope, $http, $q) {
 
                 } else {
                     var tmp_departures = x.itdRouteList.itdRoute[j].itdPartialRouteList.itdPartialRoute.itdStopSeq.itdPoint;
-                    console.log('tmp_departures', tmp_departures);
+                    // console.log('tmp_departures', tmp_departures);
                     var departures = [];
                     for (var i = 0; i < tmp_departures.length; i++) {
                         if (i == 0 || i == tmp_departures.length - 1) {
@@ -131,8 +154,13 @@ function MainCtrl($scope, $http, $q) {
                             departures.push(tmp_departures[i]);
                         }
                     }
-                    $scope.departures = departures;
+                    trainplan.departures = departures;
                 }
+                
+
+                $scope.trainlist.push(trainplan);             
+                }//loop over all trains
+                
                 $scope.apply;
             }).catch(function (e) {
                 console.log('Error no internet', e); // "oh, no!"                                        
@@ -141,6 +169,10 @@ function MainCtrl($scope, $http, $q) {
                 var minute = currentDate.getMinutes();
                 var hour = currentDate.getHours();
 
+                $scope.starttime = undefined;
+                $scope.endtime = undefined;
+                
+                
                 var indexa = objectFindByKey($scope.stations, 'id', journey.startpoint.id);
                 var indexb = objectFindByKey($scope.stations, 'id', journey.endpoint.id);
 
@@ -158,8 +190,19 @@ function MainCtrl($scope, $http, $q) {
                     } else {
                         minute = minute + 2;
                     }
+                    
+                    if(i==0){
+                        $scope.starttime = formatnumber(hour)+':'+formatnumber(minute);
+                    }
+                    
+                    if (i==$scope.departures.length-1){
+                       $scope.endtime = formatnumber(hour)+':'+formatnumber(minute);
+                    }
+                    
                     $scope.departures[i] = { _name: $scope.departures[i].name, 'itdDateTime': { 'itdTime': { _hour: hour, _minute: minute } } };
                 }
+                
+                $scope.apply;
 
             });
 

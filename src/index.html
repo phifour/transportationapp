@@ -37,67 +37,93 @@
 
             <div class="alert alert-danger" ng-show="journey.startpoint==undefined">Start undefined</div>
             <div class="alert alert-danger" ng-show="journey.endpoint==undefined">End undefined</div>
-
-            <button class="btn btn-primary btn-block" ng-click="request(journey)">Request Route</button>
+            <button class="btn btn-primary btn-block" ng-click="request(journey)">Request Trains</button>
         </div>
 
+        <div class="container-fluid" ng-repeat="train in trainlist" ng-show="youareoffline==false">
+            <h3>Train {{$index}}, Departure: {{train.start}}, Arrival: {{train.end}}</h3>
+            <button class="btn btn-info btn-block" ng-init="train.showschedule=false" ng-click="train.showschedule=!train.showschedule;">{{switcher(train.showschedule)}} Train {{$index}} Stops</button>
 
-        <div class="container" ng-show="showresult">
-            <div class="row">
-                <div class="col-sm-6" align="center">
-                    <h3>Start : {{startime}}</h3></div>
-                <div class="col-sm-6" align="center">
-                    <h3>Estimated End : {{endtime}}</h3></div>
+            <table ng-show="train.showschedule" class="table table-bordered table-hover table-condensed">
+
+                <col align="center">
+                    <col align="left">
+                        <col align="right">
+
+                            <tr style="font-weight: bold">
+                                <td></td>
+                                <td>Station</td>
+                                <td>Time</td>
+                            </tr>
+
+
+                            <tr ng-repeat="x in train.departures">
+                                <td align="center">
+                                    U1
+                                    <div class="full-circle">
+                                        <div>
+                                </td>
+                                <td>
+                                    <strong>{{x._name}}</strong>
+                                </td>
+                                <td>
+                                    <strong>{{formatnumber(x.itdDateTime.itdTime._hour)}}:{{formatnumber(x.itdDateTime.itdTime._minute)}}</strong>
+                                </td>
+                            </tr>
+            </table>
+
+
             </div>
-        </div>
-
-        <div class="alert alert-danger" ng-show="youareoffline">No internet connection using chached offline data</div>
-
-        <table class="table table-bordered table-hover table-condensed">
-
-            <col align="center">
-                <col align="left">
-                    <col align="right">
-
-                        <tr style="font-weight: bold">
-                            <td></td>
-                            <td>Station</td>
-                            <td>Time</td>
-                        </tr>
 
 
-                        <tr ng-repeat="x in departures">
-                            <td align="center">
-                                U1
-                                <div class="full-circle">
-                                    <div>
-                            </td>
-                            <td>
-                                <strong>{{x._name}}</strong>
-                            </td>
-                            <td>
-                                <strong>{{formatnumber(x.itdDateTime.itdTime._hour)}}:{{formatnumber(x.itdDateTime.itdTime._minute)}}</strong>
-                            </td>
-                        </tr>
-        </table>
 
 
-        <script type="text/javascript" src="dependencies/jquery.min.js"></script>
-        <script type="text/javascript" src="dependencies/xml2json.js"></script>
-        <script type="text/javascript" src="dependencies/bootstrap.min.js"></script>
-        <script type="text/javascript" src="dependencies/angular.min.js"></script>
-        <script type="text/javascript" src="dependencies/ui-bootstrap-tpls-1.3.2.js"></script>
-        <script type="text/javascript" src="dependencies/angular-resource.min.js"></script>
-        <script type="text/javascript" src="dependencies/angular-route.min.js"></script>
-        <script type="text/javascript" src="js/app.js"></script>
+            <div ng-show="youareoffline">
+                <h3>Train 0, Departure: {{starttime}}, Arrival: {{endtime}}</h3>
+                <button class="btn btn-info btn-block" ng-init="showschedule=false" ng-click="showschedule=!showschedule;">{{switcher(showschedule)}} Train 0 Stops</button>
+                <div class="alert alert-danger">No internet connection using chached offline data</div>
+                <table class="table table-bordered table-hover table-condensed" ng-show="showschedule">
 
-        <script>
-            if ('serviceWorker' in navigator) {
+                    <col align="center">
+                        <col align="left">
+                            <col align="right">
+                                <tr style="font-weight: bold">
+                                    <td></td>
+                                    <td>Station</td>
+                                    <td>Time</td>
+                                </tr>
+                                <tr ng-repeat="x in departures">
+                                    <td align="center">
+                                        U1
+                                        <div class="full-circle">
+                                            <div>
+                                    </td>
+                                    <td>
+                                        <strong>{{x._name}}</strong>
+                                    </td>
+                                    <td>
+                                        <strong>{{formatnumber(x.itdDateTime.itdTime._hour)}}:{{formatnumber(x.itdDateTime.itdTime._minute)}}</strong>
+                                    </td>
+                                </tr>
+                </table>
+                </div>
+
+                <script type="text/javascript" src="dependencies/jquery.min.js"></script>
+                <script type="text/javascript" src="dependencies/xml2json.js"></script>
+                <script type="text/javascript" src="dependencies/bootstrap.min.js"></script>
+                <script type="text/javascript" src="dependencies/angular.min.js"></script>
+                <script type="text/javascript" src="dependencies/ui-bootstrap-tpls-1.3.2.js"></script>
+                <script type="text/javascript" src="dependencies/angular-resource.min.js"></script>
+                <script type="text/javascript" src="dependencies/angular-route.min.js"></script>
+                <script type="text/javascript" src="js/app.js"></script>
+
+                <script>
+                    if ('serviceWorker' in navigator) {
                         navigator.serviceWorker.register('/my-service-worker.js').then(function() { 
                     console.log("Service Worker Registered"); 
                     });
                     }
-        </script>
+                </script>
 </body>
 
 </html>
